@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CustomerController.class);
-	
+
 	@GetMapping("customers")
 	public ResponseEntity<List<Customer>> getAllCustomer() {
 		LOG.info("Get all customers");
@@ -63,5 +64,13 @@ public class CustomerController {
 		}
 			
 		return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.NOT_FOUND);
+	}
+
+}
+@org.springframework.stereotype.Controller
+class ViewController {
+	@GetMapping("/")
+	public String index() {
+		return "forward:/index.html";
 	}
 }

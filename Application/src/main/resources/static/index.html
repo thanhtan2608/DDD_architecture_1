@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Khách hàng</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; }
+        .form-group { margin-bottom: 15px; }
+        input { padding: 8px; width: 200px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 15px; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 4px; }
+        button:hover { background-color: #218838; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Thêm Khách hàng mới</h2>
+    <div class="form-group">
+        <input type="text" id="name" placeholder="Nhập tên khách hàng">
+        <input type="text" id="job" placeholder="Nhập công việc">
+        <button onclick="createCustomer()">Thêm mới</button>
+    </div>
+
+    <hr>
+
+    <h2>Danh sách Khách hàng</h2>
+    <table id="customerTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên (Name)</th>
+            <th>Công việc (Job)</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const API_URL = '/customers';
+
+    // Hàm lấy danh sách khách hàng
+    async function loadCustomers() {
+        const response = await fetch(API_URL);
+        const customers = await response.json();
+        const tbody = document.querySelector('#customerTable tbody');
+        tbody.innerHTML = '';
+
+        customers.forEach(c => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><small>${c.id}</small></td>
+                    <td>${c.name}</td>
+                    <td>${c.job}</td>
+                </tr>
+            `;
+        });
+    }
+
+    // Hàm tạo khách hàng mới
+    async function createCustomer() {
+        const name = document.getElementById('name').value;
+        const job = document.getElementById('job').value;
+
+        // Theo như Endpoint bạn gửi: POST /customers?name=&job=
+        const response = await fetch(`${API_URL}?name=${name}&job=${job}`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            alert('Thêm thành công!');
+            document.getElementById('name').value = '';
+            document.getElementById('job').value = '';
+            loadCustomers(); // Tải lại bảng
+        } else {
+            alert('Có lỗi xảy ra!');
+        }
+    }
+
+    // Chạy khi trang web vừa load xong
+    loadCustomers();
+</script>
+
+</body>
+</html>
